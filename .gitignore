@@ -1,0 +1,7 @@
+*.o
+*.ko
+*.core
+semfsctl-sync
+.DS_Store
+*.log
+

@@ -1,0 +1,49 @@
+# Installation Instructions
+
+## Kernel Module
+
+```sh
+make load
+```
+
+To auto-load on boot:
+```sh
+echo semfs_load="YES" >> /boot/loader.conf
+```
+
+## Userland Tool
+
+```sh
+cd scripts
+gmake install
+```
+
+## Devfs Permissions
+
+Ensure the following devfs rules are enabled:
+```conf
+[devfsrules_semfs=100]
+add path 'semfsctl' mode 0600 group wheel
+```
+
+Enable via `/etc/rc.conf`:
+```sh
+devfs_system_ruleset="semfs"
+```
+
+## Periodic Job
+
+State is auto-saved daily. Place `etc/periodic/daily/440.semfs_state` under `/etc/periodic/daily`.
+
+## Tests
+
+Run manual regression test:
+```sh
+sh test/semfsctl-sync-test.sh
+```
+
+Run ATF tests with Kyua:
+```sh
+cd tests/semfs
+kyua test
+```

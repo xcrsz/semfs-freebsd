@@ -1,0 +1,15 @@
+.Dd June 2025
+.Dt SEMFS 4
+.Os
+.Sh NAME
+.Nm semfs
+.Nd dynamic semantic filesystem interface
+.Sh DESCRIPTION
+The
+.Nm
+pseudo-device allows injection and reading of semantic file entries via
+/dev/semfsctl. Nodes have timestamps and can be observed via
+.Xr kqueue 2 .
+The kernel rejects writes when
+.Va vfs.semfs.readonly
+is set to 1.

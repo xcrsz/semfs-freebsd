@@ -1,0 +1,2 @@
+[devfsrules_semfs=100]
+add path 'semfsctl' mode 0600 group wheel

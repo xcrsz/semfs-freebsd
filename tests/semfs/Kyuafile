@@ -1,0 +1,4 @@
+syntax(2)
+test_suite("semfs")
+
+atf_test_program{name="semfs_test"}
