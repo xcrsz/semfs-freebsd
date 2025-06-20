@@ -1,12 +1,82 @@
-.Dd June 2025
+.Dd June 20, 2025
 .Dt SEMFSCTL-SYNC 8
 .Os
 .Sh NAME
 .Nm semfsctl-sync
-.Nd inject semantic keys into /dev/semfsctl
+.Nd query interface for the semfs semantic filesystem
 .Sh SYNOPSIS
 .Nm
+.Fl -query Ar expression
 .Sh DESCRIPTION
-Injects static or dynamic key:value pairs into
-.Pa /dev/semfsctl .
-Supports simple entries and automatically enables readonly mode when required.
+The
+.Nm
+utility queries data exposed by the
+.Xr semfs 4
+semantic filesystem. The query expression allows users to match metadata keys and values with support for logical and comparison operators.
+
+.Sh OPTIONS
+.Bl -tag -width --query
+.It Fl -query Ar expression
+Filter output using a query expression. The expression may include:
+.Bl -bullet -compact
+.It
+Key-value comparisons using
+.Ql =
+,
+.Ql ==
+,
+.Ql != ,
+.Ql >
+,
+.Ql <
+,
+.Ql >= ,
+.Ql <=
+.It
+Quoted string values (use escaped quotes as needed: \")
+.It
+Logical conjunctions:
+.Ql &&
+and
+.Ql ||
+.It
+Grouping using parentheses
+.Ql ()
+.El
+.Pp
+All comparisons are string-based unless both operands are numeric, in which case numerical comparison is performed.
+
+.Sh EXAMPLES
+Query all entries where level is exactly "warn":
+.Bd -literal -offset indent
+semfsctl-sync --query "level==warn"
+.Ed
+
+Query entries with uptime greater than or equal to 300:
+.Bd -literal -offset indent
+semfsctl-sync --query "uptime>=300"
+.Ed
+
+Query entries that are either warnings or informational and of type log:
+.Bd -literal -offset indent
+semfsctl-sync --query "(level==warn || level==info) && type==log"
+.Ed
+
+Query entries where message contains embedded quotes:
+.Bd -literal -offset indent
+semfsctl-sync --query 'msg="disk said: \"error 99\""'
+.Ed
+
+.Sh FILES
+.Bl -tag -compact -width /dev/semfsctl
+.It Pa /dev/semfsctl
+Kernel interface exposed by
+.Xr semfs 4 .
+.El
+
+.Sh SEE ALSO
+.Xr semfs 4 ,
+.Xr semfsctl 8
+
+.Sh AUTHORS
+.An Vester Thacker Aq Mt xcrsz@fastmail.jp
